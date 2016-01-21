@@ -128,13 +128,16 @@ func Mention(nick, channel, beforeNick, afterNick string) interface{} {
 		text += ": "
 	}
 	text += afterNick
-	j := map[string]string{
+	return Message(text, channel)
+}
+
+func Message(text, channel string) interface{} {
+	return map[string]string{
 		"id": time.Now().Format("010206150405"),
 		"type": "message",
 		"channel": channel,
 		"text": text,
 	}
-	return j
 }
 
 func main() {
