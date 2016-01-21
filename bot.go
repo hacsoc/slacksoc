@@ -43,6 +43,7 @@ func (bot *Bot) Start() error {
 	if !present || ok != true {
 		return &RTMStartError{"could not connect to RTM API"}
 	}
+	bot.GetChannelInfo()
 	websocketURL, _ := payload["url"].(string)
 	bot.WebSocketURL = websocketURL
 	return nil
