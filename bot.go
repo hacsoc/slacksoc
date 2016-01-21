@@ -22,11 +22,11 @@ const (
 
 type Bot struct {
 	Token string
-	Channels []string
+	Channels map[string]string
 	WebSocketURL string
 }
 
-func NewBot(token string, channels []string) *Bot {
+func NewBot(token string, channels map[string]string) *Bot {
 	return &Bot{Token: token, Channels: channels}
 }
 
