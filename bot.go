@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -30,26 +29,13 @@ func NewBot(token string) *Bot {
 	return &Bot{Token: token}
 }
 
-func (bot *Bot) call(method string, data url.Values) (*http.Response, error) {
+func (bot *Bot) Call(method string, data url.Values) (*http.Response, error) {
 	data.Set("token", bot.Token)
 	return api.Call(method, data)
 }
 
-func (bot *Bot) startRTM() ([]byte, error) {
-	resp, err := bot.call("rtm.start", url.Values{})
-	if err != nil {
-		return nil, err
-	}
-	return ioutil.ReadAll(resp.Body)
-}
-
 func (bot *Bot) Start() error {
-	rawData, err := bot.startRTM()
-	if err != nil {
-		return err
-	}
-	var payload map[string]interface{}
-	err = json.Unmarshal(rawData, &payload)
+	payload, err := httpToJSON(bot.Call("rtm.start", url.Values{}))
 	if err != nil {
 		return err
 	}
