@@ -75,44 +75,54 @@ func (bot *Bot) Loop() error {
 		}
 		switch message["type"].(string) {
 		case "message":
-			ReceiveMessage(conn, message)
+			bot.ReceiveMessage(conn, message)
 		default:
 			continue
 		}
 	}
 }
 
-func ReceiveMessage(conn *websocket.Conn, message map[string]interface{}) {
+func (bot *Bot) ReceiveMessage(conn *websocket.Conn, message map[string]interface{}) {
 	subtype, hasSubtype := message["subtype"]
 	hiddenSubtype, ok := message["hidden"]
 	hidden := ok && hiddenSubtype.(bool)
-	reply := ConstructReply(message, subtype, hasSubtype, hidden)
+	reply := bot.ConstructReply(message, subtype, hasSubtype, hidden)
 	if reply != nil {
 		conn.WriteJSON(reply)
 	}
 }
 
-func ConstructReply(message map[string]interface{}, subtype interface{}, hasSubtype, hidden bool) interface{} {
+func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface{}, hasSubtype, hidden bool) interface{} {
 	if hasSubtype {
 		switch subtype.(string) {
 		case "bot_message":
 			// don't reply to other bots
 			return nil
 		case "channel_join":
+			return bot.SetRealNameFields(message)
+		default:
+			return nil
 		}
-		return nil
 	} else {
 		text := message["text"].(string)
 		if strings.Contains(text, "hi slacksoc") {
-			return Mention(message, "hi ", "")
+			return Mention(message["user"].(string), message["channel"].(string), "hi ", "")
 		}
 		return nil
 	}
 }
 
-func Mention(message map[string]interface{}, beforeNick, afterNick string) interface{} {
+func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
+	channel := message["channel"].(string)
+	if channel != bot.Channels["slackers"] { // currently testing with slackers (this should be general)
+		return nil
+	}
+	return Mention(message["user"].(string), channel, "", "Please set your real name fields")
+}
+
+func Mention(nick, channel, beforeNick, afterNick string) interface{} {
 	text := beforeNick
-	nick := "<@" + message["user"].(string) + ">"
+	nick = "<@" + nick + ">"
 	text += nick
 	if text == nick {
 		text += ": "
@@ -121,7 +131,7 @@ func Mention(message map[string]interface{}, beforeNick, afterNick string) inter
 	j := map[string]string{
 		"id": time.Now().Format("010206150405"),
 		"type": "message",
-		"channel": message["channel"].(string),
+		"channel": channel,
 		"text": text,
 	}
 	return j
