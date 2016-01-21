@@ -26,8 +26,8 @@ type Bot struct {
 	WebSocketURL string
 }
 
-func NewBot(token string, channels map[string]string) *Bot {
-	return &Bot{Token: token, Channels: channels}
+func NewBot(token string) *Bot {
+	return &Bot{Token: token}
 }
 
 func (bot *Bot) call(method string, data url.Values) (*http.Response, error) {
@@ -147,7 +147,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	bot := NewBot(token, nil)
+	bot := NewBot(token)
 	fmt.Println("Starting bot")
 	if err := bot.Start(); err != nil {
 		fmt.Println(err)
