@@ -83,17 +83,17 @@ func (bot *Bot) Loop() error {
 }
 
 func (bot *Bot) ReceiveMessage(conn *websocket.Conn, message map[string]interface{}) {
-	subtype, hasSubtype := message["subtype"]
+	subtype, _ := message["subtype"]
 	hiddenSubtype, ok := message["hidden"]
 	hidden := ok && hiddenSubtype.(bool)
-	reply := bot.ConstructReply(message, subtype, hasSubtype, hidden)
+	reply := bot.ConstructReply(message, subtype, hidden)
 	if reply != nil {
 		conn.WriteJSON(reply)
 	}
 }
 
-func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface{}, hasSubtype, hidden bool) interface{} {
-	if hasSubtype {
+func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface{}, hidden bool) interface{} {
+	if subtype != nil {
 		switch subtype.(string) {
 		case "bot_message":
 			// don't reply to other bots
