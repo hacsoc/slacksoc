@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"net/url"
+)
+
 func (bot *Bot) DirectMessage(user, text string) interface{} {
 	dm, err := bot.OpenDirectMessage(user)
 	if err != nil {
