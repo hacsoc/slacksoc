@@ -107,6 +107,8 @@ func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface
 		text := message["text"].(string)
 		if strings.Contains(text, "hi slacksoc") {
 			return Mention(message["user"].(string), message["channel"].(string), "hi ", "")
+		} else if text == "slacksoc: pm me" {
+			return bot.DirectMessage(message["user"].(string), "hi")
 		}
 		return nil
 	}
