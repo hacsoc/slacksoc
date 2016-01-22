@@ -4,14 +4,21 @@ import (
 	"time"
 )
 
-func Mention(nick, channel, beforeNick, afterNick string) interface{} {
+func mentionText(nick, beforeNick, afterNick string) string {
 	text := beforeNick
 	nick = "<@" + nick + ">"
 	text += nick
-	if text == nick {
-		text += ": "
+	if text == nick && afterNick != "" {
+		text += ":"
 	}
-	text += afterNick
+	if afterNick != "" {
+		text += " " + afterNick
+	}
+	return text
+}
+
+func Mention(nick, channel, beforeNick, afterNick string) interface{} {
+	text := mentionText(nick, beforeNick, afterNick)
 	return Message(text, channel)
 }
 
