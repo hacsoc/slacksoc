@@ -1,3 +1,5 @@
+package main
+
 func Mention(nick, channel, beforeNick, afterNick string) interface{} {
 	text := beforeNick
 	nick = "<@" + nick + ">"
