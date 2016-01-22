@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/hacsoc/slacksoc/api"
