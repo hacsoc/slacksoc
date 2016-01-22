@@ -1,0 +1,11 @@
+language: go
+
+go:
+    - 1.5
+    - tip
+
+install:
+    - go get -d -v github.com/hacsoc/slacksoc
+
+script:
+    - go test -cover
