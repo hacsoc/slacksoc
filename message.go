@@ -4,6 +4,22 @@ import (
 	"time"
 )
 
+type Message struct {
+	id string
+	messageType string
+	channel string
+	text string
+}
+
+func (message *Message) ToMap() map[string]string {
+	return map[string]string{
+		"id": message.id,
+		"type": message.messageType,
+		"channel": message.channel,
+		"text": message.text,
+	}
+}
+
 func mentionText(nick, beforeNick, afterNick string) string {
 	text := beforeNick
 	nick = "<@" + nick + ">"
@@ -19,14 +35,14 @@ func mentionText(nick, beforeNick, afterNick string) string {
 
 func Mention(nick, channel, beforeNick, afterNick string) interface{} {
 	text := mentionText(nick, beforeNick, afterNick)
-	return Message(text, channel)
+	return NewMessage(text, channel).ToMap()
 }
 
-func Message(text, channel string) interface{} {
-	return map[string]string{
-		"id": time.Now().Format("010206150405"),
-		"type": "message",
-		"channel": channel,
-		"text": text,
+func NewMessage(text, channel string) *Message {
+	return &Message{
+		id: time.Now().Format("010206150405"),
+		messageType: "message",
+		channel: channel,
+		text: text,
 	}
 }
