@@ -40,7 +40,7 @@ func (bot *Bot) Start() error {
 	}
 	ok, present := payload["ok"].(bool)
 	if !present || ok != true {
-		return &RTMStartError{"could not connect to RTM API"}
+		return &SlacksocError{"could not connect to RTM API"}
 	}
 	bot.GetChannelInfo()
 	websocketURL, _ := payload["url"].(string)
@@ -142,7 +142,7 @@ func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
 	text += " Then click \"Edit\"."
 	text = fmt.Sprintf(text, nick)
 	dm := <- dmChan
-	return Message(text, dm)
+	return NewMessage(text, dm).ToMap()
 }
 
 func main() {

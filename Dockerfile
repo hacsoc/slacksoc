@@ -8,4 +8,6 @@ RUN set -x \
 	&& go build -o /usr/bin/slacksoc . \
 	&& rm -rf $GOPATH
 
-CMD ["slacksoc"]
+ADD startup.sh /usr/bin/
+
+CMD ["startup.sh"]

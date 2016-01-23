@@ -10,7 +10,7 @@ func (bot *Bot) DirectMessage(user, text string) interface{} {
 	if err != nil {
 		return nil
 	}
-	return Message(text, dm)
+	return NewMessage(text, dm).ToMap()
 }
 
 func (bot *Bot) OpenDirectMessage(user string) (string, error) {
