@@ -18,8 +18,5 @@ func httpToJSON(resp *http.Response, err error) (JSONObject, error) {
 	}
 	var payload JSONObject
 	err = json.Unmarshal(raw, &payload)
-	if err != nil {
-		return nil, err
-	}
-	return payload, nil
+	return payload, err
 }
