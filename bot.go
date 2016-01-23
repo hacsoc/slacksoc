@@ -40,7 +40,7 @@ func (bot *Bot) Start() error {
 	}
 	ok, present := payload["ok"].(bool)
 	if !present || ok != true {
-		return &RTMStartError{"could not connect to RTM API"}
+		return &SlacksocError{"could not connect to RTM API"}
 	}
 	bot.GetChannelInfo()
 	websocketURL, _ := payload["url"].(string)

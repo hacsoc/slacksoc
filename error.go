@@ -1,9 +1,9 @@
 package main
 
-type RTMStartError struct {
+type SlacksocError struct {
 	message string
 }
 
-func (e *RTMStartError) Error() string {
+func (e *SlacksocError) Error() string {
 	return e.message
 }
