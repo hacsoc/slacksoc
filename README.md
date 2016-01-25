@@ -1,7 +1,7 @@
 # slacksoc
 
 [![Build Status](https://travis-ci.org/hacsoc/slacksoc.svg?branch=master)](https://travis-ci.org/hacsoc/slacksoc)
-[![Coverage Status](https://coveralls.io/repos/github/hacsoc/slacksoc/badge.svg?branch=coverage)](https://coveralls.io/github/hacsoc/slacksoc?branch=coverage)
+[![Coverage Status](https://coveralls.io/repos/github/hacsoc/slacksoc/badge.svg?branch=master)](https://coveralls.io/github/hacsoc/slacksoc?branch=master)
 
 Our friendly little slackbot.
 
