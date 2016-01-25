@@ -24,6 +24,6 @@ func (bot *Bot) OpenDirectMessage(user string) (string, error) {
 		fmt.Println(payload)
 		return "", nil // need an actual error here
 	}
-	channel := payload["channel"].(JSONObject)
+	channel := payload["channel"].(map[string]interface{})
 	return channel["id"].(string), nil
 }

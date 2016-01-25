@@ -16,7 +16,7 @@ const (
 	TOKEN_VAR = "SLACKSOC_TOKEN"
 	NO_TOKEN_ERROR = "You must have the SLACKSOC_TOKEN variable to run the" +
 					 " slacksoc bot"
-	VERSION = "0.0.2"
+	VERSION = "0.0.3"
 )
 
 type Bot struct {
@@ -69,7 +69,7 @@ func (bot *Bot) Loop() error {
 		if err = json.Unmarshal(bytes, &message); err != nil {
 			continue
 		}
-		fmt.Println("", message)
+		fmt.Println(message)
 		if _, ok := message["type"]; !ok {
 			continue
 		}
@@ -137,7 +137,7 @@ func (bot *Bot) SetRealNameFields(message JSONObject) interface{} {
 		fmt.Println(payload)
 		return nil
 	}
-	user := payload["user"].(JSONObject)
+	user := payload["user"].(map[string]interface{})
 	nick := user["name"].(string)
 	text := "Please set your real name fields. https://hacsoc.slack.com/team/%s."
 	text += " Then click \"Edit\"."
