@@ -16,7 +16,7 @@ const (
 	TOKEN_VAR = "SLACKSOC_TOKEN"
 	NO_TOKEN_ERROR = "You must have the SLACKSOC_TOKEN variable to run the" +
 					 " slacksoc bot"
-	VERSION = "0.0.3"
+	VERSION = "0.0.4"
 )
 
 type Bot struct {
@@ -65,7 +65,7 @@ func (bot *Bot) Loop() error {
 		if messageType == websocket.BinaryMessage {
 			continue // ignore binary messages
 		}
-		var message JSONObject
+		var message map[string]interface{}
 		if err = json.Unmarshal(bytes, &message); err != nil {
 			continue
 		}
@@ -82,7 +82,7 @@ func (bot *Bot) Loop() error {
 	}
 }
 
-func (bot *Bot) ReceiveMessage(conn *websocket.Conn, message JSONObject) {
+func (bot *Bot) ReceiveMessage(conn *websocket.Conn, message map[string]interface{}) {
 	subtype, _ := message["subtype"]
 	hiddenSubtype, ok := message["hidden"]
 	hidden := ok && hiddenSubtype.(bool)
@@ -92,7 +92,7 @@ func (bot *Bot) ReceiveMessage(conn *websocket.Conn, message JSONObject) {
 	}
 }
 
-func (bot *Bot) ConstructReply(message JSONObject, subtype interface{}, hidden bool) interface{} {
+func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface{}, hidden bool) interface{} {
 	if subtype != nil {
 		switch subtype.(string) {
 		case "bot_message":
@@ -114,7 +114,7 @@ func (bot *Bot) ConstructReply(message JSONObject, subtype interface{}, hidden b
 	}
 }
 
-func (bot *Bot) SetRealNameFields(message JSONObject) interface{} {
+func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
 	channel := message["channel"].(string)
 	if channel != bot.Channels["general"] {
 		return nil
@@ -131,7 +131,7 @@ func (bot *Bot) SetRealNameFields(message JSONObject) interface{} {
 		payload, err := httpToJSON(resp, err)
 		userChan <- payload
 	}()
-	payload := (<- userChan).(JSONObject)
+	payload := (<- userChan).(map[string]interface{})
 	success := payload["ok"].(bool)
 	if !success {
 		fmt.Println(payload)

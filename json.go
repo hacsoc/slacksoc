@@ -6,9 +6,7 @@ import (
 	"net/http"
 )
 
-type JSONObject map[string]interface{}
-
-func httpToJSON(resp *http.Response, err error) (JSONObject, error) {
+func httpToJSON(resp *http.Response, err error) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -16,7 +14,7 @@ func httpToJSON(resp *http.Response, err error) (JSONObject, error) {
 	if err != nil {
 		return nil, err
 	}
-	var payload JSONObject
+	var payload map[string]interface{}
 	err = json.Unmarshal(raw, &payload)
 	return payload, err
 }
