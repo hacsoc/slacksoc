@@ -19,7 +19,7 @@ func (bot *Bot) GetChannelInfo() {
 		return
 	}
 	for _, channel := range channels {
-		channelMap := channel.(JSONObject)
+		channelMap := channel.(map[string]interface{})
 		id := channelMap["id"].(string)
 		name := channelMap["name"].(string)
 		bot.Channels[name] = id
