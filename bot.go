@@ -16,7 +16,7 @@ const (
 	TOKEN_VAR = "SLACKSOC_TOKEN"
 	NO_TOKEN_ERROR = "You must have the SLACKSOC_TOKEN variable to run the" +
 					 " slacksoc bot"
-	VERSION = "0.0.4"
+	VERSION = "0.0.5"
 )
 
 type Bot struct {
