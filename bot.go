@@ -109,9 +109,22 @@ func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface
 			return Mention(message["user"].(string), message["channel"].(string), "hi ", "")
 		} else if text == "slacksoc: pm me" {
 			return bot.DirectMessage(message["user"].(string), "hi")
+		} else if text == "have you tried installing Gentoo?" {
+			go bot.React(message, "funroll-loops")
+			return nil
 		}
 		return nil
 	}
+}
+
+func (bot *Bot) React(message map[string]interface{}, reaction string) {
+	channel := message["channel"].(string)
+	timestamp := message["ts"].(string)
+	parameters := url.Values{}
+	parameters.Set("channel", channel)
+	parameters.Set("timestamp", timestamp)
+	parameters.Set("name", reaction)
+	bot.Call("reactions.add", parameters)
 }
 
 func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
