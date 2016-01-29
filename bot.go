@@ -16,7 +16,7 @@ const (
 	TOKEN_VAR = "SLACKSOC_TOKEN"
 	NO_TOKEN_ERROR = "You must have the SLACKSOC_TOKEN variable to run the" +
 					 " slacksoc bot"
-	VERSION = "0.0.5"
+	VERSION = "0.0.6"
 )
 
 type Bot struct {
@@ -109,7 +109,7 @@ func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface
 			return Mention(message["user"].(string), message["channel"].(string), "hi ", "")
 		} else if text == "slacksoc: pm me" {
 			return bot.DirectMessage(message["user"].(string), "hi")
-		} else if text == "have you tried installing Gentoo?" {
+		} else if strings.Contains(text, "gentoo") || strings.Contains(text, "Gentoo") {
 			go bot.React(message, "funroll-loops")
 			return nil
 		}
