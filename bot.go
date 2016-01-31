@@ -1,138 +1,26 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
 	"net/url"
 	"os"
-	"strings"
 
-	"github.com/gorilla/websocket"
-	"github.com/hacsoc/slacksoc/api"
+	"github.com/ajm188/slack"
 )
 
 const (
 	TOKEN_VAR = "SLACKSOC_TOKEN"
 	NO_TOKEN_ERROR = "You must have the SLACKSOC_TOKEN variable to run the" +
 					 " slacksoc bot"
-	VERSION = "0.0.6"
+	VERSION = "0.1.0"
 )
 
-type Bot struct {
-	Token string
-	Channels map[string]string
-	WebSocketURL string
-}
-
-func NewBot(token string) *Bot {
-	return &Bot{Token: token}
-}
-
-func (bot *Bot) Call(method string, data url.Values) (*http.Response, error) {
-	data.Set("token", bot.Token)
-	return api.Call(method, data)
-}
-
-func (bot *Bot) Start() error {
-	payload, err := httpToJSON(bot.Call("rtm.start", url.Values{}))
-	if err != nil {
-		return err
-	}
-	ok, present := payload["ok"].(bool)
-	if !present || ok != true {
-		return &SlacksocError{"could not connect to RTM API"}
-	}
-	bot.GetChannelInfo()
-	websocketURL, _ := payload["url"].(string)
-	bot.WebSocketURL = websocketURL
-	return nil
-}
-
-func (bot *Bot) Loop() error {
-	dialer := websocket.Dialer{}
-	conn, _, err := dialer.Dial(bot.WebSocketURL, http.Header{})
-	if err != nil {
-		return err
-	}
-	for {
-		messageType, bytes, err := conn.ReadMessage()
-		if err != nil {
-			// NextReader returns an error if the connection is closed
-			conn.Close()
-			return nil
-		}
-		if messageType == websocket.BinaryMessage {
-			continue // ignore binary messages
-		}
-		var message map[string]interface{}
-		if err = json.Unmarshal(bytes, &message); err != nil {
-			continue
-		}
-		fmt.Println(message)
-		if _, ok := message["type"]; !ok {
-			continue
-		}
-		switch message["type"].(string) {
-		case "message":
-			bot.ReceiveMessage(conn, message)
-		default:
-			continue
-		}
-	}
-}
-
-func (bot *Bot) ReceiveMessage(conn *websocket.Conn, message map[string]interface{}) {
-	subtype, _ := message["subtype"]
-	hiddenSubtype, ok := message["hidden"]
-	hidden := ok && hiddenSubtype.(bool)
-	reply := bot.ConstructReply(message, subtype, hidden)
-	if reply != nil {
-		conn.WriteJSON(reply)
-	}
-}
-
-func (bot *Bot) ConstructReply(message map[string]interface{}, subtype interface{}, hidden bool) interface{} {
-	if subtype != nil {
-		switch subtype.(string) {
-		case "bot_message":
-			// don't reply to other bots
-			return nil
-		case "channel_join":
-			return bot.SetRealNameFields(message)
-		default:
-			return nil
-		}
-	} else {
-		text := message["text"].(string)
-		if strings.Contains(text, "hi slacksoc") {
-			return Mention(message["user"].(string), message["channel"].(string), "hi ", "")
-		} else if text == "slacksoc: pm me" {
-			return bot.DirectMessage(message["user"].(string), "hi")
-		} else if strings.Contains(text, "gentoo") || strings.Contains(text, "Gentoo") {
-			go bot.React(message, "funroll-loops")
-			return nil
-		}
-		return nil
-	}
-}
-
-func (bot *Bot) React(message map[string]interface{}, reaction string) {
-	channel := message["channel"].(string)
-	timestamp := message["ts"].(string)
-	parameters := url.Values{}
-	parameters.Set("channel", channel)
-	parameters.Set("timestamp", timestamp)
-	parameters.Set("name", reaction)
-	bot.Call("reactions.add", parameters)
-}
-
-func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
-	channel := message["channel"].(string)
+func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
+	channel := event["channel"].(string)
 	if channel != bot.Channels["general"] {
-		return nil
+		return nil, slack.CONTINUE
 	}
-	userID := message["user"].(string)
+	userID := event["user"].(string)
 	dmChan := make(chan string)
 	userChan := make(chan interface{})
 	go func() {
@@ -140,15 +28,14 @@ func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
 		dmChan <- dm
 	}()
 	go func() {
-		resp, err := bot.Call("users.info", url.Values{"user": []string{userID}})
-		payload, err := httpToJSON(resp, err)
+		payload, _ := bot.Call("users.info", url.Values{"user": []string{userID}})
 		userChan <- payload
 	}()
 	payload := (<- userChan).(map[string]interface{})
 	success := payload["ok"].(bool)
 	if !success {
 		fmt.Println(payload)
-		return nil
+		return nil, slack.CONTINUE
 	}
 	user := payload["user"].(map[string]interface{})
 	nick := user["name"].(string)
@@ -156,7 +43,12 @@ func (bot *Bot) SetRealNameFields(message map[string]interface{}) interface{} {
 	text += " Then click \"Edit\"."
 	text = fmt.Sprintf(text, nick)
 	dm := <- dmChan
-	return NewMessage(text, dm).ToMap()
+	return slack.NewMessage(text, dm), slack.CONTINUE
+}
+
+func sendDM(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
+	user := event["user"].(string)
+	return bot.DirectMessage(user, "hi"), slack.CONTINUE
 }
 
 func main() {
@@ -166,13 +58,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	bot := NewBot(token)
+	bot := slack.NewBot(token)
+	bot.Respond("hi", slack.Respond("hi there!"))
+	bot.Respond("pm me", sendDM)
+	bot.Listen("gentoo", slack.React("funroll-loops"))
+	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
 	fmt.Println("Starting bot")
 	if err := bot.Start(); err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Looping")
-	if err := bot.Loop(); err != nil {
 		fmt.Println(err)
 	}
 }
