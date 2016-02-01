@@ -61,6 +61,8 @@ func main() {
 	bot := slack.NewBot(token)
 	bot.Respond("hi", slack.Respond("hi there!"))
 	bot.Respond("pm me", sendDM)
+	bot.Respond("((what's)|(tell me) your)? ?version??",
+		slack.Respond(fmt.Sprintf("My version is %s. My lib version is %s", version, slack.Version)))
 	bot.Listen("gentoo", slack.React("funroll-loops"))
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
 	fmt.Println("Starting bot")
