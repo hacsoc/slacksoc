@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	tokenVar = "SLACKSOC_TOKEN"
+	tokenVar     = "SLACKSOC_TOKEN"
 	noTokenError = "You must have the SLACKSOC_TOKEN variable to run the" +
-					 " slacksoc bot"
-	version = "0.1.0"
+		" slacksoc bot"
+	version = "0.2.0"
 )
 
 func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
@@ -31,7 +31,7 @@ func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Mes
 		payload, _ := bot.Call("users.info", url.Values{"user": []string{userID}})
 		userChan <- payload
 	}()
-	payload := (<- userChan).(map[string]interface{})
+	payload := (<-userChan).(map[string]interface{})
 	success := payload["ok"].(bool)
 	if !success {
 		fmt.Println(payload)
@@ -42,7 +42,7 @@ func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Mes
 	text := "Please set your real name fields. https://hacsoc.slack.com/team/%s."
 	text += " Then click \"Edit\"."
 	text = fmt.Sprintf(text, nick)
-	dm := <- dmChan
+	dm := <-dmChan
 	return slack.NewMessage(text, dm), slack.Continue
 }
 
