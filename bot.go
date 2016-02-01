@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	TOKEN_VAR = "SLACKSOC_TOKEN"
-	NO_TOKEN_ERROR = "You must have the SLACKSOC_TOKEN variable to run the" +
+	tokenVar = "SLACKSOC_TOKEN"
+	noTokenError = "You must have the SLACKSOC_TOKEN variable to run the" +
 					 " slacksoc bot"
-	VERSION = "0.1.0"
+	version = "0.1.0"
 )
 
 func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
@@ -52,9 +52,9 @@ func sendDM(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack
 }
 
 func main() {
-	token := os.Getenv(TOKEN_VAR)
+	token := os.Getenv(tokenVar)
 	if token == "" {
-		fmt.Println(NO_TOKEN_ERROR)
+		fmt.Println(noTokenError)
 		os.Exit(1)
 	}
 
