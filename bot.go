@@ -18,7 +18,7 @@ const (
 func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
 	channel := event["channel"].(string)
 	if channel != bot.Channels["general"] {
-		return nil, slack.CONTINUE
+		return nil, slack.Continue
 	}
 	userID := event["user"].(string)
 	dmChan := make(chan string)
@@ -35,7 +35,7 @@ func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Mes
 	success := payload["ok"].(bool)
 	if !success {
 		fmt.Println(payload)
-		return nil, slack.CONTINUE
+		return nil, slack.Continue
 	}
 	user := payload["user"].(map[string]interface{})
 	nick := user["name"].(string)
@@ -43,12 +43,12 @@ func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Mes
 	text += " Then click \"Edit\"."
 	text = fmt.Sprintf(text, nick)
 	dm := <- dmChan
-	return slack.NewMessage(text, dm), slack.CONTINUE
+	return slack.NewMessage(text, dm), slack.Continue
 }
 
 func sendDM(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
 	user := event["user"].(string)
-	return bot.DirectMessage(user, "hi"), slack.CONTINUE
+	return bot.DirectMessage(user, "hi"), slack.Continue
 }
 
 func main() {
