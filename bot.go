@@ -12,7 +12,7 @@ const (
 	tokenVar     = "SLACKSOC_TOKEN"
 	noTokenError = "You must have the SLACKSOC_TOKEN variable to run the" +
 		" slacksoc bot"
-	version = "0.2.1"
+	version = "0.2.2"
 )
 
 func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
