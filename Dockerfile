@@ -1,4 +1,6 @@
-FROM golang:1.5.3
+FROM golang:alpine
+
+RUN apk add --update git && rm -rf /var/cache/apk/*
 
 COPY . $GOPATH/src/github.com/hacsoc/slacksoc
 
