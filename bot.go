@@ -65,6 +65,7 @@ func main() {
 		slack.Respond(fmt.Sprintf("My version is %s. My lib version is %s", version, slack.Version)))
 	bot.Listen("gentoo", slack.React("funroll-loops"))
 	bot.Listen(".+\\bslacksoc\\b", slack.React("raisedeyebrow"))
+	bot.Listen("GNU/Linux", slack.React("stallman"))
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
 	fmt.Println("Starting bot")
 	if err := bot.Start(); err != nil {
