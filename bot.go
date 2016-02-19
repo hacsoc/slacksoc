@@ -6,12 +6,10 @@ import (
 	"os"
 
 	"github.com/ajm188/slack"
+	"github.com/ajm188/slack/plugins/github"
 )
 
 const (
-	tokenVar     = "SLACKSOC_TOKEN"
-	noTokenError = "You must have the SLACKSOC_TOKEN variable to run the" +
-		" slacksoc bot"
 	version = "0.3.4"
 )
 
@@ -61,12 +59,29 @@ func troll(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.
 		event["channel"].(string)), slack.Continue
 }
 
-func main() {
-	token := os.Getenv(tokenVar)
-	if token == "" {
-		fmt.Println(noTokenError)
+func configureGithubPlugin(id, secret, token string) {
+	github.ClientID = id
+	github.ClientSecret = secret
+	github.AccessToken = token
+
+	github.SharedClient = github.DefaultClient()
+}
+
+func getEnvvar(name string) (envvar string) {
+	envvar = os.Getenv(name)
+	if envvar == "" {
+		fmt.Println("Missing environment variable %s", name)
 		os.Exit(1)
 	}
+	return
+}
+
+func main() {
+	token := getEnvvar("SLACKSOC_TOKEN")
+
+	ghClientID := getEnvvar("GH_CLIENT_ID")
+	ghClientSecret := getEnvvar("GH_CLIENT_SECRET")
+	ghAccessToken := getEnvvar("GH_ACCESS_TOKEN")
 
 	bot := slack.NewBot(token)
 	bot.Respond("hi\\z", slack.Respond("hi there!"))
@@ -78,6 +93,10 @@ func main() {
 	bot.Listen("GNU/Linux", slack.React("stallman"))
 	bot.OnEvent("message", troll)
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
+
+	configureGithubPlugin(ghClientID, ghClientSecret, ghAccessToken)
+	github.OpenIssue(bot, nil)
+
 	fmt.Println("Starting bot")
 	if err := bot.Start(); err != nil {
 		fmt.Println(err)
