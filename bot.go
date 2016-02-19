@@ -12,7 +12,7 @@ const (
 	tokenVar     = "SLACKSOC_TOKEN"
 	noTokenError = "You must have the SLACKSOC_TOKEN variable to run the" +
 		" slacksoc bot"
-	version = "0.2.2"
+	version = "0.3.2"
 )
 
 func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
@@ -51,6 +51,16 @@ func sendDM(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack
 	return bot.DirectMessage(user, "hi"), slack.Continue
 }
 
+func troll(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
+	user, ok := event["user"]
+	if !ok || user.(string) != bot.Users["catofnostalgia"] {
+		return nil, slack.Continue
+	}
+
+	return bot.Mention(user.(string), "where is the third lambda?",
+		event["channel"].(string)), slack.Continue
+}
+
 func main() {
 	token := os.Getenv(tokenVar)
 	if token == "" {
@@ -66,6 +76,7 @@ func main() {
 	bot.Listen("gentoo", slack.React("funroll-loops"))
 	bot.Listen(".+\\bslacksoc\\b", slack.React("raisedeyebrow"))
 	bot.Listen("GNU/Linux", slack.React("stallman"))
+	bot.OnEvent("message", troll)
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
 	fmt.Println("Starting bot")
 	if err := bot.Start(); err != nil {
