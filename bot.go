@@ -69,7 +69,7 @@ func main() {
 	}
 
 	bot := slack.NewBot(token)
-	bot.Respond("hi\\z", slack.Respond("hi there!"))
+	bot.Respond("hi\\Z", slack.Respond("hi there!"))
 	bot.Respond("pm me", sendDM)
 	bot.Respond("((what's)|(tell me) your)? ?version??",
 		slack.Respond(fmt.Sprintf("My version is %s. My lib version is %s", version, slack.Version)))
