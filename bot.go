@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	version = "0.4.0"
+	version = "0.4.1"
 )
 
 func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
