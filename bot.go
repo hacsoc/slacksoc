@@ -55,16 +55,6 @@ func sendDM(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack
 	return bot.DirectMessage(user, "hi"), slack.Continue
 }
 
-func troll(bot *slack.Bot, event map[string]interface{}) (*slack.Message, slack.Status) {
-	user, ok := event["user"]
-	if !ok || user.(string) != bot.Users["catofnostalgia"].ID {
-		return nil, slack.Continue
-	}
-
-	return bot.Mention(user.(string), "where is the third lambda?",
-		event["channel"].(string)), slack.Continue
-}
-
 func configureGithubPlugin(id, secret, token string) {
 	github.ClientID = id
 	github.ClientSecret = secret
@@ -98,7 +88,6 @@ func main() {
 	bot.Listen("gentoo", slack.React("funroll-loops"))
 	bot.Listen(".+\\bslacksoc\\b", slack.React("raisedeyebrow"))
 	bot.Listen("GNU/Linux", slack.React("stallman"))
-	bot.OnEvent("message", troll)
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
 
 	configureGithubPlugin(ghClientID, ghClientSecret, ghAccessToken)
