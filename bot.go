@@ -88,7 +88,6 @@ func main() {
 	bot.Listen("gentoo", slack.React("funroll-loops"))
 	bot.Listen(".+\\bslacksoc\\b", slack.React("raisedeyebrow"))
 	bot.Listen("GNU/Linux", slack.React("stallman"))
-	bot.OnEvent("message", troll)
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
 
 	configureGithubPlugin(ghClientID, ghClientSecret, ghAccessToken)
