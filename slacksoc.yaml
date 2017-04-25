@@ -11,6 +11,7 @@ plugins:
       - trigger: ".*slack.*"
         reacts: ["raisedeyebrow"]
   - name: Debug
+    trusted: ["brenns10", "mason", "bentley"]
   - name: Love
     baseUrl: https://cwrulove.appspot.com/api
   - name: GitHub
