@@ -1,0 +1,33 @@
+[submodule "vendor/github.com/brenns10/slacksoc"]
+	path = vendor/github.com/brenns10/slacksoc
+	url = https://github.com/brenns10/slacksoc
+[submodule "vendor/github.com/google/shlex"]
+	path = vendor/github.com/google/shlex
+	url = https://github.com/google/shlex
+[submodule "vendor/github.com/mitchellh/mapstructure"]
+	path = vendor/github.com/mitchellh/mapstructure
+	url = https://github.com/mitchellh/mapstructure
+[submodule "vendor/github.com/nlopes/slack"]
+	path = vendor/github.com/nlopes/slack
+	url = https://github.com/nlopes/slack
+[submodule "vendor/golang.org/x/net"]
+	path = vendor/golang.org/x/net
+	url = https://go.googlesource.com/net
+[submodule "vendor/github.com/sirupsen/logrus"]
+	path = vendor/github.com/sirupsen/logrus
+	url = https://github.com/sirupsen/logrus
+[submodule "vendor/gopkg.in/yaml.v2"]
+	path = vendor/gopkg.in/yaml.v2
+	url = https://gopkg.in/yaml.v2
+[submodule "vendor/github.com/google/go-github"]
+	path = vendor/github.com/google/go-github
+	url = https://github.com/google/go-github
+[submodule "vendor/github.com/google/go-querystring"]
+	path = vendor/github.com/google/go-querystring
+	url = https://github.com/google/go-querystring
+[submodule "vendor/github.com/hacsoc/golove"]
+	path = vendor/github.com/hacsoc/golove
+	url = https://github.com/hacsoc/golove
+[submodule "vendor/golang.org/x/oauth2"]
+	path = vendor/golang.org/x/oauth2
+	url = https://go.googlesource.com/oauth2

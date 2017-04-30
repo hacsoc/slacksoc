@@ -1,8 +1,5 @@
 # slacksoc
 
-[![Build Status](https://travis-ci.org/hacsoc/slacksoc.svg?branch=master)](https://travis-ci.org/hacsoc/slacksoc)
-[![Coverage Status](https://coveralls.io/repos/github/hacsoc/slacksoc/badge.svg?branch=master)](https://coveralls.io/github/hacsoc/slacksoc?branch=master)
-
 Our friendly little slackbot.
 
 ## Features
@@ -10,14 +7,25 @@ Our friendly little slackbot.
 * Is very friendly (It will say hi back to you)
 * Sends you a private message on request
 * Welcomes new members by requesting that they set their Real Name field
-* Does not reply to other bots, avoiding botpocalypse
 
 ## Development
 
-You'll need a go environment set up on your machine, which you can get
-[here](https://golang.org/). Just click the big "Download Go" button and follow
-the instructions.
+Nearly all development of bots and plugins takes place in the [library][lib].
+This repository merely contains deployment information (e.g. Dockerfile),
+configuration, and pinned dependencies.
 
-If you want to run the actual bot locally, you'd need the bot's API token,
-which I probably won't give you. Luckily, you can write tests! `go test` will
-run the test suite.
+To use the pinned dependencies, be sure to `git submodule init --update`
+initially, and `git submodule update` each time you update the repository. Go
+will use code within the `vendor` directory rather than downloading the latest
+versions. `go build` will build the bot, and `docker build` will create a Docker
+image.
+
+## Updating Dependencies
+
+The convenient way to update all submodules is to use [vendetta][]. Install it
+with `go get vendetta`, and then use `vendetta -u` to update the submodules. You
+can also use `vendetta -p` to prune unneeded dependencies. Then you can commit
+the updated submodules and build a new Docker image.
+
+[lib]: https://github.com/brenns10/slacksoc
+[vendetta]: https://github.com/dwp/vendetta
