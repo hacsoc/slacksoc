@@ -17,3 +17,6 @@ plugins:
   - name: GitHub
   - name: RealName
     channel: general
+  - name: HotPotato
+    timeout: 180
+    diversityThreshold: 2.5
