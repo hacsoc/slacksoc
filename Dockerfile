@@ -1,6 +1,7 @@
 FROM golang:alpine
 
-RUN apk add --update git && rm -rf /var/cache/apk/*
+RUN apk add --update git tzdata && rm -rf /var/cache/apk/*
+RUN ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 
 COPY . $GOPATH/src/github.com/hacsoc/slacksoc
 
