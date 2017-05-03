@@ -8,8 +8,14 @@ plugins:
         replies: ["goodbye"]
       - trigger: "how much better is slack than groupme?"
         replies: ["infinity"]
-      - trigger: ".*slack.*"
+      - trigger: "slacksoc"
         reacts: ["raisedeyebrow"]
+      - trigger: "gentoo"
+        reacts: ["funroll-loops"]
+      - trigger: "usb"
+        reacts: ["usb", "uusb"]
+      - trigger: "GNU/Linux"
+        reacts: ["stallman"]
   - name: Debug
     trusted: ["brenns10", "mason", "bentley"]
   - name: Love
