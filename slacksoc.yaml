@@ -8,6 +8,8 @@ plugins:
         replies: ["goodbye"]
       - trigger: "how much better is slack than groupme?"
         replies: ["infinity"]
+      - trigger: "(A|a)dmiral (S|s)lackbar"
+        replies: ["IT'S A TRAP!!!", "https://s-media-cache-ak0.pinimg.com/originals/ed/f7/8d/edf78d4c7cae5d92995105ad20c5a7c6.jpg", "http://vignette2.wikia.nocookie.net/fantendo/images/9/95/Admiral-ackbar.jpg"]
       - trigger: "slacksoc"
         reacts: ["raisedeyebrow"]
       - trigger: "gentoo"
