@@ -23,9 +23,9 @@ image.
 ## Updating Dependencies
 
 The convenient way to update all submodules is to use [vendetta][]. Install it
-with `go get vendetta`, and then use `vendetta -u` to update the submodules. You
-can also use `vendetta -p` to prune unneeded dependencies. Then you can commit
-the updated submodules and build a new Docker image.
+with `go get github.com/dpw/vendetta`, and then use `vendetta -u` to update the
+submodules. You can also use `vendetta -p` to prune unneeded dependencies. Then
+you can commit the updated submodules and build a new Docker image.
 
 [lib]: https://github.com/brenns10/slacksoc
 [vendetta]: https://github.com/dwp/vendetta
